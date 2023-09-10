@@ -5,9 +5,11 @@ namespace LibraryCatalogSystem
 {
 	internal class Program
 	{
-		public static Dictionary<ulong, Book> Catalog = Book.PresetLibrary;
+		private static Library _currentLibrary = new Library();
+		
+		//public static Dictionary<ulong, Book> Catalog = Library.LibrarySelection;
 
-		private static string[] menu1 = { "View all books", "Search by ISBN", "Search by Title", "Search by Author", "Check out a book", "Return a book" };
+		private static string[] menu1 = { "Add new book", "Remove book", "Check out a book", "Return a book" };
 		private static string[] menu2 = { "Exit program" };
 
 		private static bool _loopMain = true;
@@ -66,6 +68,26 @@ namespace LibraryCatalogSystem
 
 			switch (selection)
 			{
+				case 1: // add new book
+					break;
+				case 2: // remove book
+					break;
+				case 3: // check out book
+					break;
+				case 4: // return book
+					break;
+				case 5: // exit program
+					tempReturnValue = false;
+					_loopMain = false;
+					break;
+				default:
+					break;
+			}
+			
+			/*
+			 * 
+			switch (selection)
+			{
 				case 1: // View all books
 					SearchManager.PrintBooks(Catalog);
 					break;
@@ -97,6 +119,7 @@ namespace LibraryCatalogSystem
 					ConsoleHelper.PrintInvalidSelection();
 					break;
 			}
+			 */
 			return tempReturnValue;
 		}
 	}
