@@ -73,15 +73,15 @@ namespace LibraryCatalogSystem
 					break;
 				case 2: // add new book
 					AddNewBook();
-					
 					break;
 				case 3: // remove book
+					RemoveBook();
 					break;
 				case 4: // check out book
 					CheckOutBook();
-					
 					break;
 				case 5: // return book
+					ReturnBook();
 					break;
 				case 6: // exit program
 					tempReturnValue = false;
@@ -141,6 +141,27 @@ namespace LibraryCatalogSystem
 			}
 		}
 		
+		private static void RemoveBook()
+		{
+			Console.Write("Enter the ISBN of the book you wish to remove: ");
+			ulong tempISBN = GenericReadLine.TryReadLine<ulong>();
+			
+			// clearing console and printing menu again to prevent clutter
+			Console.Clear();
+			PrintMenu();
+			
+			ConsoleHelper.PrintBlank();
+			if (CurrentLibrary.RemoveBook(tempISBN))
+			{
+				Console.WriteLine("Successfully removed book: ");
+				SearchManager.PrintBook(tempISBN, CurrentLibrary.LibrarySelection[tempISBN]);
+			}
+			else
+			{
+				Console.WriteLine("That book is currently not available for check-out...");
+			}
+		}
+		
 		private static void CheckOutBook()
 		{
 			Console.Write("Enter the ISBN of the book you wish to check out: ");
@@ -159,6 +180,27 @@ namespace LibraryCatalogSystem
 			else
 			{
 				Console.WriteLine("That book is currently not available for check-out...");
+			}
+		}
+		
+		private static void ReturnBook()
+		{
+			Console.Write("Enter the ISBN of the book you wish to return: ");
+			ulong tempISBN = GenericReadLine.TryReadLine<ulong>();
+				
+			// clearing console and printing menu again to prevent clutter
+			Console.Clear();
+			PrintMenu();
+				
+			ConsoleHelper.PrintBlank();
+			if (CurrentUser.ReturnBook(tempISBN, CurrentLibrary))
+			{
+				Console.WriteLine("Successfully returned book: ");
+				SearchManager.PrintBook(tempISBN, CurrentLibrary.LibrarySelection[tempISBN]);
+			}
+			else
+			{
+				Console.WriteLine("That book is currently not available for return...");
 			}
 		}
 	}
