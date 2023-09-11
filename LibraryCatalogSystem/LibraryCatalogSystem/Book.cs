@@ -14,7 +14,15 @@
 		public string Author { get; set; }
 		public BookStatus Status { get; set; }
 
-		// Constructor
+		// Constructors
+		public Book()
+		{
+			// ISBN is currently not saved in the constructor,
+			// but instead is used as a key in the dictionary
+			Title = string.Empty;
+			Author = string.Empty;
+			Status = BookStatus.Available;
+		}
 		public Book(string title, string author, BookStatus status)
 		{
 			// ISBN is currently not saved in the constructor,

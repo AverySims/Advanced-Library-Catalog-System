@@ -32,9 +32,16 @@ public static class SearchManager
 	/// </summary>
 	/// <param name="isbn">Key/ISBN value</param>
 	/// <param name="book">Book reference</param>
-	public static void PrintBook(ulong isbn, Book book)
+	public static void PrintBook(ulong isbn, Book book, bool printStatus = true)
 	{
-		Console.WriteLine($"{book.Title} by {book.Author} | Status: {book.Status}, ISBN: {isbn:D4}");
+		if (printStatus)
+		{
+			Console.WriteLine($"{book.Title} by {book.Author} | Status: {book.Status}, ISBN: {isbn:D4}");
+		}
+		else
+		{
+			Console.WriteLine($"{book.Title} by {book.Author} | ISBN: {isbn:D4}");
+		}
 	}
 	
 	/// <summary>

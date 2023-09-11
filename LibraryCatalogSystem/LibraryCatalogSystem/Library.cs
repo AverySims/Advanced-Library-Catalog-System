@@ -49,11 +49,16 @@ public class Library
     /// Removes a book from the library.
     /// </summary>
     /// <param name="isbn">The book's key value</param>
+    /// <param name="removedBook">The book that was removed</param>
     /// <returns>True if the book was successfully removed, false if the book wasn't found.</returns>
-    public bool RemoveBook(ulong isbn)
+    public bool RemoveBook(ulong isbn, out Book removedBook)
     {
+        removedBook = null;
+        
         // if the book doesn't exist in the library, return false
         if (!LibrarySelection.ContainsKey(isbn)) return false;
+        
+        removedBook = LibrarySelection[isbn];
         
         LibrarySelection.Remove(isbn);
         return true;

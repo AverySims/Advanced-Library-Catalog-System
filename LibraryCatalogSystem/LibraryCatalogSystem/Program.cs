@@ -151,10 +151,10 @@ namespace LibraryCatalogSystem
 			PrintMenu();
 			
 			ConsoleHelper.PrintBlank();
-			if (CurrentLibrary.RemoveBook(tempISBN))
+			if (CurrentLibrary.RemoveBook(tempISBN, out Book removedBook))
 			{
 				Console.WriteLine("Successfully removed book: ");
-				SearchManager.PrintBook(tempISBN, CurrentLibrary.LibrarySelection[tempISBN]);
+				SearchManager.PrintBook(tempISBN, removedBook, false);
 			}
 			else
 			{
