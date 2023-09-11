@@ -7,9 +7,11 @@ namespace LibraryCatalogSystem
 	{
 		private static Library _currentLibrary = new Library();
 		
+		private static User _currentUser = new User();
+		
 		//public static Dictionary<ulong, Book> Catalog = Library.LibrarySelection;
 
-		private static string[] menu1 = { "Add new book", "Remove book", "Check out a book", "Return a book" };
+		private static string[] menu1 = { "View library catalog", "Add new book", "Remove book", "Check out a book", "Return a book" };
 		private static string[] menu2 = { "Exit program" };
 
 		private static bool _loopMain = true;
@@ -68,15 +70,33 @@ namespace LibraryCatalogSystem
 
 			switch (selection)
 			{
-				case 1: // add new book
+				case 1: // view library catalog
+					SearchManager.PrintBooks(_currentLibrary.LibrarySelection);
 					break;
-				case 2: // remove book
+				case 2: // add new book
+					Console.Write("Enter the book's ISBN: ");
+					ulong tempISBN = GenericReadLine.TryReadLine<ulong>();
+					Console.Write("Enter the book's title: ");
+					string tempTitle = GenericReadLine.TryReadLine<string>();
+					Console.Write("Enter the book's author: ");
+					string tempAuthor = GenericReadLine.TryReadLine<string>();
+					if (_currentLibrary.AddBook(tempISBN, new Book(tempTitle, tempAuthor, BookStatus.Available)))
+					{
+						SearchManager.PrintBook(tempISBN, _currentLibrary.LibrarySelection[tempISBN]);
+					}
+					else
+					{
+						Console.WriteLine("A book with that ISBN already exists.");
+					}
+					
 					break;
-				case 3: // check out book
+				case 3: // remove book
 					break;
-				case 4: // return book
+				case 4: // check out book
 					break;
-				case 5: // exit program
+				case 5: // return book
+					break;
+				case 6: // exit program
 					tempReturnValue = false;
 					_loopMain = false;
 					break;
