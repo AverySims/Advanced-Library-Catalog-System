@@ -5,11 +5,9 @@ namespace LibraryCatalogSystem
 {
 	internal class Program
 	{
-		private static Library _currentLibrary = new Library();
-		
-		private static User _currentUser = new User();
-		
-		//public static Dictionary<ulong, Book> Catalog = Library.LibrarySelection;
+		// because of how the program is structured, these two objects must be static
+		private static readonly Library CurrentLibrary = new Library();
+		private static readonly User CurrentUser = new User();
 
 		private static string[] menu1 = { "View library catalog", "Add new book", "Remove book", "Check out a book", "Return a book" };
 		private static string[] menu2 = { "Exit program" };
@@ -71,28 +69,17 @@ namespace LibraryCatalogSystem
 			switch (selection)
 			{
 				case 1: // view library catalog
-					SearchManager.PrintBooks(_currentLibrary.LibrarySelection);
+					SearchManager.PrintBooks(CurrentLibrary.LibrarySelection);
 					break;
 				case 2: // add new book
-					Console.Write("Enter the book's ISBN: ");
-					ulong tempISBN = GenericReadLine.TryReadLine<ulong>();
-					Console.Write("Enter the book's title: ");
-					string tempTitle = GenericReadLine.TryReadLine<string>();
-					Console.Write("Enter the book's author: ");
-					string tempAuthor = GenericReadLine.TryReadLine<string>();
-					if (_currentLibrary.AddBook(tempISBN, new Book(tempTitle, tempAuthor, BookStatus.Available)))
-					{
-						SearchManager.PrintBook(tempISBN, _currentLibrary.LibrarySelection[tempISBN]);
-					}
-					else
-					{
-						Console.WriteLine("A book with that ISBN already exists.");
-					}
+					AddNewBook();
 					
 					break;
 				case 3: // remove book
 					break;
 				case 4: // check out book
+					CheckOutBook();
+					
 					break;
 				case 5: // return book
 					break;
@@ -104,43 +91,75 @@ namespace LibraryCatalogSystem
 					break;
 			}
 			
-			/*
-			 * 
-			switch (selection)
-			{
-				case 1: // View all books
-					SearchManager.PrintBooks(Catalog);
-					break;
-				case 2: // Search by ISBN
-					Console.Write("Search for a book by ISBN: ");
-					SearchManager.SearchByISBN(GenericReadLine.TryReadLine<ulong>(), Catalog, out Dictionary<ulong, Book> resultsISBN);
-					break;
-				case 3: // Search by Title
-					Console.Write("Search for a book via title: ");
-					SearchManager.SearchByTitle(GenericReadLine.TryReadLine<string>(), Catalog, out Dictionary<ulong, Book> resultsTitle);
-					break;
-				case 4: // Search by Author
-                    Console.Write("Search for a book via author: ");
-                    SearchManager.SearchByAuthor(GenericReadLine.TryReadLine<string>(), Catalog, out Dictionary<ulong, Book> resultsAuthor);
-					break;
-				case 5: // Check out book
-					Console.Write("Enter the ISBN of the book you wish to check out: ");
-					SearchManager.CheckOutBook(GenericReadLine.TryReadLine<ulong>(), ref Catalog);
-					break;
-				case 6: // return book
-					Console.Write("Enter the ISBN of the book you wish to return: ");
-					SearchManager.ReturnBook(GenericReadLine.TryReadLine<ulong>(), ref Catalog);
-					break;
-				case 7: // exit program
-					tempReturnValue = false;
-					_loopMain = false;
-					break;
-				default: // Invalid selection
-					ConsoleHelper.PrintInvalidSelection();
-					break;
-			}
-			 */
 			return tempReturnValue;
+		}
+
+		private static void AddNewBook()
+		{
+			Console.Write("Enter the book's ISBN: ");
+			ulong tempISBN = GenericReadLine.TryReadLine<ulong>();
+			
+			ConsoleHelper.PrintBlank();
+			Console.Write("Enter the book's title: ");
+			string tempTitle = GenericReadLine.TryReadLine<string>();
+			
+			ConsoleHelper.PrintBlank();
+			Console.Write("Enter the book's author: ");
+			string tempAuthor = GenericReadLine.TryReadLine<string>();
+
+			ConsoleHelper.PrintBlank();
+			while (true)
+			{
+				// attempting to add the book to the library
+				if (CurrentLibrary.AddBook(tempISBN, new Book(tempTitle, tempAuthor, BookStatus.Available)))
+				{
+					// clearing console and printing menu again to prevent clutter
+					Console.Clear();
+					PrintMenu();
+					
+					ConsoleHelper.PrintBlank();
+					Console.WriteLine("Book successfully added!");
+					
+					SearchManager.PrintBook(tempISBN, CurrentLibrary.LibrarySelection[tempISBN]);
+					break;
+				}
+				
+				// if the book wasn't successfully added, ask for a different ISBN
+				while (true)
+				{
+					// clearing console and printing menu again to prevent clutter
+					Console.Clear();
+					PrintMenu();
+					
+					ConsoleHelper.PrintBlank();
+					Console.WriteLine("A book with that ISBN already exists.");
+					Console.Write("Please enter a different ISBN: ");
+					
+					tempISBN = GenericReadLine.TryReadLine<ulong>();
+					break;
+				}
+			}
+		}
+		
+		private static void CheckOutBook()
+		{
+			Console.Write("Enter the ISBN of the book you wish to check out: ");
+			ulong tempISBN = GenericReadLine.TryReadLine<ulong>();
+			
+			// clearing console and printing menu again to prevent clutter
+			Console.Clear();
+			PrintMenu();
+			
+			ConsoleHelper.PrintBlank();
+			if (CurrentLibrary.CheckOutBook(tempISBN, CurrentUser))
+			{
+				Console.WriteLine("Successfully checked out book: ");
+				SearchManager.PrintBook(tempISBN, CurrentLibrary.LibrarySelection[tempISBN]);
+			}
+			else
+			{
+				Console.WriteLine("That book is currently not available for check-out...");
+			}
 		}
 	}
 }
