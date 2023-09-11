@@ -3,7 +3,8 @@
 	public enum BookStatus
 	{
 		Available,
-		CheckedOut
+		CheckedOut,
+		Unavailable
 	}
 
 	public class Book

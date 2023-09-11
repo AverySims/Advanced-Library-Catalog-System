@@ -53,13 +53,16 @@ public class Library
     /// <returns>True if the book was successfully removed, false if the book wasn't found.</returns>
     public bool RemoveBook(ulong isbn, out Book removedBook)
     {
+        // setting the out parameter to null
         removedBook = null;
         
         // if the book doesn't exist in the library, return false
         if (!LibrarySelection.ContainsKey(isbn)) return false;
         
+        // setting the out parameter to the book that was removed
         removedBook = LibrarySelection[isbn];
         
+        // removing the book from the library
         LibrarySelection.Remove(isbn);
         return true;
     }
